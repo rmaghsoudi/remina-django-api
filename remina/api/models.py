@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Planet(model.Model):
+class Planet(models.Model):
     description = models.CharField(max_length=140)
     relative = models.IntegerField(default=None)
     # TODO: insert custom validator for the type
