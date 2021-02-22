@@ -20,6 +20,9 @@ class Goal(models.Model):
     # TODO: create custom validator for timePeriod
     timePeriod = models.CharField(max_length=40)
 
+    def __str__(self):
+        return self.description
+
 
 class Habit(models.Model):
     description = models.CharField(max_length=140)
@@ -37,6 +40,9 @@ class Habit(models.Model):
     # TODO: create custom validators for frequency
     frequency = models.CharField(max_length=40)
 
+    def __str__(self):
+        return self.description
+
 
 class Todo(models.Model):
     description = models.CharField(max_length=140)
@@ -53,6 +59,9 @@ class Todo(models.Model):
     dateCompleted = models.DateTimeField(auto_now=False, auto_now_add=False)
     dueDate = models.DateTimeField(auto_now=False, auto_now_add=False)
 
+    def __str__(self):
+        return self.description
+
 
 class User(models.Model):
     username = models.CharField(
@@ -68,5 +77,8 @@ class User(models.Model):
     xp_to_lvlup = models.IntegerField(
         default=1515,
     )
+
+    def __str__(self):
+        return self.description
 
 # attributes for the user class: an identifier (email, username, etc..), level,
