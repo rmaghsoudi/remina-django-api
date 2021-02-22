@@ -8,6 +8,8 @@ class Goal(models.Model):
     relative = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
     user = models.ForeignKey(
         'User',
@@ -15,8 +17,18 @@ class Goal(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
-    dateCompleted = models.DateTimeField(auto_now=False, auto_now_add=False)
-    dueDate = models.DateTimeField(auto_now=False, auto_now_add=False)
+    dateCompleted = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+    )
+    dueDate = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+    )
     # TODO: create custom validator for timePeriod
     timePeriod = models.CharField(max_length=40)
 
@@ -29,6 +41,8 @@ class Habit(models.Model):
     relative = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
     user = models.ForeignKey(
         'User',
@@ -36,7 +50,12 @@ class Habit(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
-    dateCompleted = models.DateTimeField(auto_now=False, auto_now_add=False)
+    dateCompleted = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+    )
     # TODO: create custom validators for frequency
     frequency = models.CharField(max_length=40)
 
@@ -49,6 +68,8 @@ class Todo(models.Model):
     relative = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
     user = models.ForeignKey(
         'User',
@@ -56,8 +77,18 @@ class Todo(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
-    dateCompleted = models.DateTimeField(auto_now=False, auto_now_add=False)
-    dueDate = models.DateTimeField(auto_now=False, auto_now_add=False)
+    dateCompleted = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+    )
+    dueDate = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.description
@@ -79,6 +110,6 @@ class User(models.Model):
     )
 
     def __str__(self):
-        return self.description
+        return self.username
 
 # attributes for the user class: an identifier (email, username, etc..), level,
