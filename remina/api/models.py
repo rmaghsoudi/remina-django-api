@@ -13,6 +13,7 @@ class Goal(models.Model):
     )
     user = models.ForeignKey(
         'User',
+        related_name='goals',
         on_delete=models.CASCADE,
     )
     xp = models.IntegerField(default=1)
@@ -46,6 +47,7 @@ class Habit(models.Model):
     )
     user = models.ForeignKey(
         'User',
+        related_name='habits',
         on_delete=models.CASCADE,
     )
     xp = models.IntegerField(default=1)
@@ -73,6 +75,7 @@ class Todo(models.Model):
     )
     user = models.ForeignKey(
         'User',
+        related_name='todos',
         on_delete=models.CASCADE,
     )
     xp = models.IntegerField(default=1)
