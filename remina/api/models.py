@@ -7,6 +7,7 @@ class Goal(models.Model):
     description = models.CharField(max_length=140)
     relative = models.ForeignKey(
         'self',
+        related_name='relatives',
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -41,6 +42,7 @@ class Habit(models.Model):
     description = models.CharField(max_length=140)
     relative = models.ForeignKey(
         'self',
+        related_name='relatives',
         on_delete=models.CASCADE,
         blank=True,
         null=True,
@@ -69,6 +71,7 @@ class Todo(models.Model):
     description = models.CharField(max_length=140)
     relative = models.ForeignKey(
         'self',
+        related_name='relatives',
         on_delete=models.CASCADE,
         blank=True,
         null=True,
