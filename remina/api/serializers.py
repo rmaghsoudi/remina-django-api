@@ -8,7 +8,7 @@ class TodoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Todo
-        fields = ['id', 'description', 'xp',
+        fields = ['id', 'description', 'xp', 'user',
                   'completed', 'dateCompleted', 'dueDate', 'relatives']
 
 
@@ -17,7 +17,7 @@ class HabitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Habit
-        fields = ['id', 'description', 'xp', 'completed',
+        fields = ['id', 'description', 'xp', 'completed', 'user',
                   'dateCompleted', 'frequency', 'relatives']
 
 
@@ -26,14 +26,14 @@ class GoalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goal
-        fields = ['id', 'description', 'xp', 'completed',
+        fields = ['id', 'description', 'xp', 'completed', 'user',
                   'dateCompleted', 'dueDate', 'timePeriod', 'relatives']
 
 
 class UserSerializer(serializers.ModelSerializer):
-    todos = TodoSerializer(many=True)
-    habits = HabitSerializer(many=True)
-    goals = GoalSerializer(many=True)
+    todos = TodoSerializer(many=True, required=False)
+    habits = HabitSerializer(many=True, required=False)
+    goals = GoalSerializer(many=True, required=False)
 
     class Meta:
         model = User

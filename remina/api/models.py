@@ -16,6 +16,7 @@ class Goal(models.Model):
         'User',
         related_name='goals',
         on_delete=models.CASCADE,
+        blank=True,
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
@@ -51,6 +52,7 @@ class Habit(models.Model):
         'User',
         related_name='habits',
         on_delete=models.CASCADE,
+        blank=True,
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
@@ -80,6 +82,7 @@ class Todo(models.Model):
         'User',
         related_name='todos',
         on_delete=models.CASCADE,
+        blank=True,
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
