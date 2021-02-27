@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import UserView, TodoView, HabitView, GoalView
+from .views import UserView, TodoView, HabitView, GoalView, CheckView
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -12,4 +12,5 @@ urlpatterns = [
     path('habits/<int:pk>', HabitView.as_view()),
     path('goals/', GoalView.as_view()),
     path('goals/<int:pk>', GoalView.as_view()),
+    path('checks/', CheckView.as_view()),
 ]

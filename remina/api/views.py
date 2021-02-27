@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
-from .models import User, Todo, Habit, Goal
-from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer
+from .models import User, Todo, Habit, Goal, Check
+from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
 
 # Create your views here.
 
@@ -155,3 +155,14 @@ class GoalView(APIView):
         goal.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class CheckView(APIView):
+
+    def post(self, request, format=None):
+        new_check = request.data
+        serializer = CheckSerializer(data=new_check)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

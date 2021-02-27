@@ -7,7 +7,7 @@ class CheckSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Check
-        fields = ['id', 'dateCompleted']
+        fields = ['id', 'habit', 'dateCompleted']
 
 
 class TodoSerializer(serializers.ModelSerializer):
