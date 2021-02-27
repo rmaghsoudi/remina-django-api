@@ -33,7 +33,10 @@ class Goal(models.Model):
         null=True,
     )
     # TODO: create custom validator for timePeriod
-    timePeriod = models.CharField(max_length=40)
+    timePeriod = models.CharField(
+        max_length=40,
+        blank=True,
+        )
 
     def __str__(self):
         return self.description
@@ -63,7 +66,10 @@ class Habit(models.Model):
         null=True,
     )
     # TODO: create custom validators for frequency
-    frequency = models.CharField(max_length=40)
+    frequency = models.CharField(
+        max_length=40,
+        blank=True,
+    )
 
     def __str__(self):
         return self.description
