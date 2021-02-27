@@ -1,33 +1,35 @@
 from rest_framework import serializers
 
-from .models import User, Todo, Habit, Goal
+from .models import User, Todo, Habit, Goal, Check
+
+
+class CheckSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Check
+        fields = ['id', 'dateCompleted']
 
 
 class TodoSerializer(serializers.ModelSerializer):
-    relatives = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Todo
-        fields = ['id', 'description', 'xp', 'user',
-                  'completed', 'dateCompleted', 'dueDate', 'relatives']
+        fields = ['id', 'description', 'xp', 'user', 'completed', 'dueDate']
 
 
 class HabitSerializer(serializers.ModelSerializer):
-    relatives = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    checks = CheckSerializer(many=True, required=False)
 
     class Meta:
         model = Habit
-        fields = ['id', 'description', 'xp', 'completed', 'user',
-                  'dateCompleted', 'frequency', 'relatives']
+        fields = ['id', 'description', 'xp', 'user', 'checks']
 
 
 class GoalSerializer(serializers.ModelSerializer):
-    relatives = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Goal
-        fields = ['id', 'description', 'xp', 'completed', 'user',
-                  'dateCompleted', 'dueDate', 'timePeriod', 'relatives']
+        fields = ['id', 'description', 'xp', 'completed', 'user', 'timePeriod']
 
 
 class UserSerializer(serializers.ModelSerializer):
