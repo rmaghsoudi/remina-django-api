@@ -5,13 +5,6 @@ from django.db import models
 
 class Goal(models.Model):
     description = models.CharField(max_length=140)
-    relative = models.ForeignKey(
-        'self',
-        related_name='relatives',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-    )
     user = models.ForeignKey(
         'User',
         related_name='goals',
@@ -20,23 +13,11 @@ class Goal(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
-    dateCompleted = models.DateTimeField(
-        auto_now=False,
-        auto_now_add=False,
-        blank=True,
-        null=True,
-    )
-    dueDate = models.DateTimeField(
-        auto_now=False,
-        auto_now_add=False,
-        blank=True,
-        null=True,
-    )
     # TODO: create custom validator for timePeriod
     timePeriod = models.CharField(
         max_length=40,
         blank=True,
-        )
+    )
 
     def __str__(self):
         return self.description
@@ -44,13 +25,6 @@ class Goal(models.Model):
 
 class Habit(models.Model):
     description = models.CharField(max_length=140)
-    relative = models.ForeignKey(
-        'self',
-        related_name='relatives',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-    )
     user = models.ForeignKey(
         'User',
         related_name='habits',
@@ -58,18 +32,6 @@ class Habit(models.Model):
         blank=True,
     )
     xp = models.IntegerField(default=1)
-    completed = models.BooleanField(default=False)
-    dateCompleted = models.DateTimeField(
-        auto_now=False,
-        auto_now_add=False,
-        blank=True,
-        null=True,
-    )
-    # TODO: create custom validators for frequency
-    frequency = models.CharField(
-        max_length=40,
-        blank=True,
-    )
 
     def __str__(self):
         return self.description
@@ -77,13 +39,6 @@ class Habit(models.Model):
 
 class Todo(models.Model):
     description = models.CharField(max_length=140)
-    relative = models.ForeignKey(
-        'self',
-        related_name='relatives',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-    )
     user = models.ForeignKey(
         'User',
         related_name='todos',
@@ -92,12 +47,6 @@ class Todo(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
-    dateCompleted = models.DateTimeField(
-        auto_now=False,
-        auto_now_add=False,
-        blank=True,
-        null=True,
-    )
     dueDate = models.DateTimeField(
         auto_now=False,
         auto_now_add=False,
@@ -107,6 +56,21 @@ class Todo(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class Check(models.Model):
+    habit = models.ForeignKey(
+        'Habit',
+        related_name='checks',
+        on_delete=models.CASCADE,
+        blank=True,
+    )
+    dateCompleted = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+    )
 
 
 class User(models.Model):
