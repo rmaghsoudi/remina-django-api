@@ -83,6 +83,7 @@ class TodoView(APIView):
         todo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class HabitView(APIView):
 
     def get_object(self, pk):
@@ -116,5 +117,41 @@ class HabitView(APIView):
     def delete(self, request, pk, format=None):
         habit = self.get_object(pk)
         habit.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class GoalView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Goal.objects.get(pk=pk)
+        except Goal.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        goal = self.get_object(pk)
+        serializer = GoalSerializer(goal)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        new_goal = request.data
+        serializer = GoalSerializer(data=new_goal)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk, format=None):
+        goal = self.get_object(pk)
+        serializer = GoalSerializer(goal, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        goal = self.get_object(pk)
+        goal.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
