@@ -45,7 +45,7 @@ class UserView(APIView):
     def delete(self, request, pk, format=None):
         user = self.get_object(pk)
         user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'User deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class TodoView(APIView):
@@ -81,7 +81,7 @@ class TodoView(APIView):
     def delete(self, request, pk, format=None):
         todo = self.get_object(pk)
         todo.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Todo deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class HabitView(APIView):
@@ -117,7 +117,7 @@ class HabitView(APIView):
     def delete(self, request, pk, format=None):
         habit = self.get_object(pk)
         habit.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Habit deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class GoalView(APIView):
@@ -153,7 +153,7 @@ class GoalView(APIView):
     def delete(self, request, pk, format=None):
         goal = self.get_object(pk)
         goal.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Goal deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CheckView(APIView):
