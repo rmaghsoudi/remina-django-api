@@ -32,11 +32,11 @@ class UserView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# TODO: add leveling functionality to edit how patches work
+# TODO: edit how patches work to encompass other patch requests (other than xp reqs)
     def patch(self, request, pk, format=None):
         user = self.get_object(pk)
-        # updated_user = user.leveling_up(int(request.data['xp']))
-        serializer = UserSerializer(user, data=request.data)
+        updated_user = user.leveling_up(int(request.data['xp']))
+        serializer = UserSerializer(user, data=updated_user)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
