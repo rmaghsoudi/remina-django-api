@@ -22,7 +22,7 @@ class HabitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Habit
-        fields = ['id', 'description', 'xp', 'user', 'checks']
+        fields = ['id', 'description', 'multiplier', 'user', 'checks']
 
 
 class GoalSerializer(serializers.ModelSerializer):

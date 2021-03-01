@@ -31,7 +31,7 @@ class Habit(models.Model):
         on_delete=models.CASCADE,
         blank=True,
     )
-    xp = models.IntegerField(default=1)
+    multiplier = models.IntegerField(default=1)
 
     def __str__(self):
         return self.description
