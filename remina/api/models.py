@@ -71,9 +71,9 @@ class Check(models.Model):
         blank=True,
         null=True,
     )
-    
+
     def __str__(self):
-        return self.dateCompleted
+        return self.dateCompleted.strftime("%m/%d/%Y, %H:%M:%S")
 
 
 class User(models.Model):
@@ -93,7 +93,7 @@ class User(models.Model):
 
     def __str__(self):
         return self.username
-    
+
     # leveling formula, using the current level it determines how much is needed to lvlup
     def calculate_xp_to_lvlup(self, level=None):
         if level == None:
@@ -140,4 +140,3 @@ class User(models.Model):
             user['xp'] = new_xp
 
         return user
-
