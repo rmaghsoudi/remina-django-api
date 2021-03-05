@@ -84,7 +84,7 @@ class User(models.Model):
     level = models.IntegerField(
         default=1,
     )
-    xp_total = models.IntegerField(
+    xp = models.IntegerField(
         default=0,
     )
     xp_to_lvlup = models.IntegerField(
