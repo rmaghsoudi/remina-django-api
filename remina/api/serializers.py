@@ -11,6 +11,8 @@ class CheckSerializer(serializers.ModelSerializer):
 
 
 class TodoSerializer(serializers.ModelSerializer):
+    dueDate = serializers.DateTimeField(
+        format="%b %d, %Y %I:%M %p", required=False, read_only=True)
 
     class Meta:
         model = Todo
