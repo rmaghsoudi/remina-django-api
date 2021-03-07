@@ -78,7 +78,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 REST_FRAMEWORK = {
-    'DATETIME_FORMAT': '%b %d, %Y %I:%M %p'
+    'DATETIME_FORMAT': '%b %d, %Y %-I:%M %p'
 }
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
