@@ -77,6 +77,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': '%b %d, %Y %I:%M %p'
+}
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
