@@ -61,6 +61,15 @@ class TodoView(APIView):
         serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
 
+    def post(self, request, format=None):
+        new_todo = request.data
+        serializer = TodoSerializer(data=new_todo)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TodoDetailView(APIView):
 
