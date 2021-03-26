@@ -7,14 +7,14 @@ class CheckSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Check
-        fields = ['id', 'habit', 'dateCompleted']
+        fields = ['id', 'habit', 'timestamp']
 
 
 class TodoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Todo
-        fields = ['id', 'description', 'xp', 'user', 'completed', 'dueDate']
+        fields = ['id', 'description', 'xp', 'user', 'completed', 'dueDate', 'dueTime']
 
 
 class HabitSerializer(serializers.ModelSerializer):
