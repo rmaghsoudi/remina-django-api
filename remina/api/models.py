@@ -47,12 +47,17 @@ class Todo(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
-    dueDate = models.DateTimeField(
-        auto_now=False,
+    dueDate = models.DateField(
+        auto_now=False, 
         auto_now_add=False,
         blank=True,
         null=True,
     )
+    dueTime = models.TimeField(
+        auto_now=False, 
+        auto_now_add=False,
+        blank=True,
+        null=True,)
 
     def __str__(self):
         return self.description
@@ -65,15 +70,14 @@ class Check(models.Model):
         on_delete=models.CASCADE,
         blank=True,
     )
-    dateCompleted = models.DateTimeField(
+    timestamp = models.DateTimeField(
         auto_now=False,
-        auto_now_add=False,
+        auto_now_add=True,
         blank=True,
-        null=True,
     )
 
     def __str__(self):
-        return self.dateCompleted.strftime("%m/%d/%Y, %H:%M:%S")
+        return self.timestamp.strftime("%m/%d/%Y, %H:%M:%S")
 
 
 class User(models.Model):
