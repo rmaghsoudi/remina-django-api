@@ -6,6 +6,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
+from .helpers import clear_empty_obj_values
 
 # Create your views here.
 
@@ -86,7 +87,8 @@ class TodoDetailView(APIView):
 
     def patch(self, request, pk, format=None):
         todo = self.get_object(pk)
-        serializer = TodoSerializer(todo, data=request.data)
+        updated_todo = clear_empty_obj_values(request.data)
+        serializer = TodoSerializer(todo, data=updated_todo, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
