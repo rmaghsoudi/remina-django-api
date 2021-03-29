@@ -102,15 +102,15 @@ class TodoDetailView(APIView):
 
 class HabitView(APIView):
 
-    def get_object(self, pk):
-        try:
-            return Habit.objects.get(pk=pk)
-        except Habit.DoesNotExist:
-            raise Http404
+    def get_objects(self):
+        try: 
+           return Habit.objects.filter(user=self.request.query_params.get('user_id'))   
+        except:
+            raise HttpResponseServerError
 
-    def get(self, request, pk, format=None):
-        habit = self.get_object(pk)
-        serializer = HabitSerializer(habit)
+    def get(self, request, format=None):
+        habits = self.get_objects()
+        serializer = HabitSerializer(habits, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -121,6 +121,10 @@ class HabitView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class HabitDetailView(APIView):
 
     def patch(self, request, pk, format=None):
         habit = self.get_object(pk)
@@ -134,7 +138,6 @@ class HabitView(APIView):
         habit = self.get_object(pk)
         habit.delete()
         return Response({'message': 'Habit deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
-
 
 class GoalView(APIView):
 
