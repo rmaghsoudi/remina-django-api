@@ -126,6 +126,12 @@ class HabitView(APIView):
 
 class HabitDetailView(APIView):
 
+    def get_object(self, pk):
+        try:
+            return Habit.objects.get(pk=pk)
+        except Habit.DoesNotExist:
+            raise Http404
+
     def patch(self, request, pk, format=None):
         habit = self.get_object(pk)
         serializer = HabitSerializer(habit, data=request.data)
