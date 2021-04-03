@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
+from datetime import datetime
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
 from .helpers import clear_empty_obj_values, one_week_ago, to_dict, create_check_array
@@ -111,6 +112,10 @@ class HabitView(APIView):
                 current_week_checks = to_dict(checks)
                 complete_check_array = create_check_array(current_week_checks)
                 current_week_habits[i]['checks'] = complete_check_array
+                current_week_habits[i]['flags'] = {}
+                current_week_habits[i]['flags']['todayCompleted'] = False
+                if type(current_week_habits[i]['checks'][datetime.today().weekday()]) is dict:
+                    current_week_habits[i]['flags']['todayCompleted'] = True
 
             return current_week_habits
         except:
