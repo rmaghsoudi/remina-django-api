@@ -11,5 +11,5 @@ urlpatterns = [
     path('habits/<int:pk>', HabitDetailView.as_view()),
     path('goals/', GoalView.as_view()),
     path('goals/<int:pk>', GoalView.as_view()),
-    path('checks/', CheckView.as_view()),
+    path('checks', CheckView.as_view()),
 ]

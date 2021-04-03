@@ -72,7 +72,7 @@ class Check(models.Model):
     )
     timestamp = models.DateTimeField(
         auto_now=False,
-        auto_now_add=False,
+        auto_now_add=True,
         blank=True,
     )
 
