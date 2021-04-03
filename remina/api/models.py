@@ -13,6 +13,11 @@ class Goal(models.Model):
     )
     xp = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=True,
+        blank=True,
+    )
     # TODO: create custom validator for timePeriod
     timePeriod = models.CharField(
         max_length=40,
