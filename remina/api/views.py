@@ -6,7 +6,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
-from .helpers import clear_empty_obj_values, one_week_ago, to_dict
+from .helpers import clear_empty_obj_values, one_week_ago, to_dict, create_check_array
 
 # Create your views here.
 
@@ -109,8 +109,8 @@ class HabitView(APIView):
             for i in range(0, len(current_week_habits)):
                 checks = habits[i].checks.filter(timestamp__gte=one_week_ago())
                 current_week_checks = to_dict(checks)
-
-                current_week_habits[i]['checks'] = current_week_checks
+                complete_check_array = create_check_array(current_week_checks)
+                current_week_habits[i]['checks'] = complete_check_array
 
             return current_week_habits
         except:

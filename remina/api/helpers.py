@@ -14,6 +14,13 @@ def to_dict(model_array):
     dict_array.append(data)
   return dict_array
 
+def create_check_array(checks):
+  array = [0, 1, 2, 3, 4, 5, 6]
+  for check in checks:
+    array[check['timestamp'].weekday()] = check
+  return array
+
+
 def one_week_ago():
   one_week_ago = datetime.today() - timedelta(days=7)
   one_week_ago_tzaware = one_week_ago.replace(tzinfo=pytz.UTC)
