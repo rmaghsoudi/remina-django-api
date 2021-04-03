@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from datetime import datetime
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
-from .helpers import clear_empty_obj_values, one_week_ago, to_dict, create_check_array
+from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dict, create_check_array
 
 # Create your views here.
 
@@ -54,7 +54,7 @@ class TodoView(APIView):
 
     def get_objects(self):
         try: 
-           return Todo.objects.filter(user=self.request.query_params.get('user_id'))   
+            return Todo.objects.filter(user=self.request.query_params.get('user_id'))   
         except:
             raise HttpResponseServerError
 
@@ -160,15 +160,17 @@ class HabitDetailView(APIView):
 
 class GoalView(APIView):
 
-    def get_object(self, pk):
+    def get_objects(self):
         try:
-            return Goal.objects.get(pk=pk)
-        except Goal.DoesNotExist:
-            raise Http404
+            current_goals = []
+            goals = Goal.objects.filter(user=self.request.query_params.get('user_id'))
+            return goals   
+        except:
+            raise HttpResponseServerError
 
-    def get(self, request, pk, format=None):
-        goal = self.get_object(pk)
-        serializer = GoalSerializer(goal)
+    def get(self, request, format=None):
+        goals = self.get_objects()
+        serializer = GoalSerializer(goals, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -179,6 +181,14 @@ class GoalView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class GoalDetailView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Goal.objects.get(pk=pk)
+        except Goal.DoesNotExist:
+            raise Http404
+
 
     def patch(self, request, pk, format=None):
         goal = self.get_object(pk)

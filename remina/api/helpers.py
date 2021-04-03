@@ -1,3 +1,4 @@
+from dateutil.relativedelta import *
 from datetime import datetime, timedelta
 import pytz
 from itertools import chain
@@ -25,6 +26,11 @@ def one_week_ago():
   one_week_ago = datetime.today() - timedelta(days=7)
   one_week_ago_tzaware = one_week_ago.replace(tzinfo=pytz.UTC)
   return one_week_ago_tzaware
+
+def one_month_ago():
+  one_month_ago = datetime.today() - relativedelta(month=-1)
+  one_month_ago_tzaware = one_month_ago.replace(tzinfo=pytz.UTC)
+  return one_month_ago_tzaware
 
 def clear_empty_obj_values(obj):
   for i in list(obj):

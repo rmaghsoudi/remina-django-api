@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import UserView, TodoView, TodoDetailView, HabitView, HabitDetailView, GoalView, CheckView
+from .views import UserView, TodoView, TodoDetailView, HabitView, HabitDetailView, GoalView, GoalDetailView, CheckView
 
 
 urlpatterns = [
@@ -9,7 +9,7 @@ urlpatterns = [
     path('todos/<int:pk>', TodoDetailView.as_view()),
     path('habits', HabitView.as_view()),
     path('habits/<int:pk>', HabitDetailView.as_view()),
-    path('goals/', GoalView.as_view()),
-    path('goals/<int:pk>', GoalView.as_view()),
+    path('goals', GoalView.as_view()),
+    path('goals/<int:pk>', GoalDetailView.as_view()),
     path('checks', CheckView.as_view()),
 ]

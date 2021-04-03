@@ -4,6 +4,8 @@ Django==3.1.6
 django-cors-headers==3.7.0
 djangorestframework==3.12.2
 pycodestyle==2.6.0
+python-dateutil==2.8.1
 pytz==2021.1
+six==1.15.0
 sqlparse==0.4.1
 toml==0.10.2
