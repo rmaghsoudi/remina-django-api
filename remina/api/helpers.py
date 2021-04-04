@@ -34,6 +34,23 @@ def create_check_array(checks):
     array[check['timestamp'].weekday()] = check
   return array
 
+def goal_res_processor(goals):
+  res = {'stopper': False, 'goals': None}
+  processed_array = []
+  base_array = ['day', 'week', 'month']
+  test_array = []
+  for goal in goals:
+    if (goal['timePeriod'] in base_array) and (goal['timePeriod'] not in test_array):
+      test_array.append(goal)
+  processed_array = sorted(test_array, key = lambda i: i['timePeriod'])
+  if len(processed_array) == 3:
+    processed_array[2], processed_array[1] = processed_array[1], processed_array[2]
+    res['stopper'] = True
+
+  res['goals'] = processed_array
+  return res
+
+    
 
 def one_week_ago():
   one_week_ago = datetime.today() - timedelta(days=7)

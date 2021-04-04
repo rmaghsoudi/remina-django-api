@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from datetime import datetime
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
-from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dict, create_check_array
+from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dict, create_check_array, goal_res_processor
 
 # Create your views here.
 
@@ -162,14 +162,16 @@ class GoalView(APIView):
 
     def get_objects(self):
         try:
-            return Goal.objects.filter(user=self.request.query_params.get('user_id'), completed=False)   
+            goals = to_dict(Goal.objects.filter(user=self.request.query_params.get('user_id'), completed=False))
+            processed_goals = goal_res_processor(goals)
+            return processed_goals
         except:
             raise HttpResponseServerError
 
     def get(self, request, format=None):
         goals = self.get_objects()
-        serializer = GoalSerializer(goals, many=True)
-        return Response(serializer.data)
+        # serializer = GoalSerializer(goals, many=True)
+        return Response(goals)
 
     def post(self, request, format=None):
         new_goal = request.data
