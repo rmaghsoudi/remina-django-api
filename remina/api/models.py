@@ -5,7 +5,7 @@ from .helpers import validate_timeperiod
 
 
 class Goal(models.Model):
-    description = models.CharField(max_length=140)
+    description = models.CharField(max_length=140,blank=True)
     user = models.ForeignKey(
         'User',
         related_name='goals',
