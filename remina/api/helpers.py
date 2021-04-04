@@ -1,8 +1,21 @@
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from dateutil.relativedelta import *
 from datetime import datetime, timedelta
 import pytz
 from itertools import chain
 
+# CUSTOM VALIDATORS
+goal_types = ['day', 'week', 'month']
+
+def validate_timeperiod(value):
+    if value not in goal_types:
+        raise ValidationError(
+            _('%(value)s is not a goal type'),
+            params={'value': value},
+        )
+
+# CUSTOM METHODS
 def to_dict(model_array):
   dict_array = []
   for instance in model_array:

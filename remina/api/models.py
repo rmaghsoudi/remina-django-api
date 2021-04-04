@@ -1,4 +1,5 @@
 from django.db import models
+from .helpers import validate_timeperiod
 
 # Create your models here.
 
@@ -22,6 +23,7 @@ class Goal(models.Model):
     timePeriod = models.CharField(
         max_length=40,
         blank=True,
+        validators=[validate_timeperiod]
     )
 
     def __str__(self):
