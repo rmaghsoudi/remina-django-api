@@ -162,9 +162,7 @@ class GoalView(APIView):
 
     def get_objects(self):
         try:
-            current_goals = []
-            goals = Goal.objects.filter(user=self.request.query_params.get('user_id'))
-            return goals   
+            return Goal.objects.filter(user=self.request.query_params.get('user_id'), completed=False)   
         except:
             raise HttpResponseServerError
 
