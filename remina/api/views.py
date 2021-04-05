@@ -11,9 +11,12 @@ from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dic
 
 # Create your views here.
 
-def get_and_level_user(id, xp):
+def get_and_level_user(id, xp, multiplier):
     user = User.objects.get(pk=id)
-    updated_user = user.leveling_up(int(xp))
+    if multiplier:
+        updated_user = user.leveling_up(100 * xp)
+    else:
+        updated_user = user.leveling_up(int(xp))
     serializer = UserSerializer(user, data=updated_user)
     if serializer.is_valid():
         serializer.save()
@@ -219,10 +222,12 @@ class GoalDetailView(APIView):
 class CheckView(APIView):
 
     def post(self, request, format=None):
+        habit = Habit.objects.get(pk=request.data['habit'])
         new_check = request.data
         serializer = CheckSerializer(data=new_check)
         if serializer.is_valid():
             serializer.save()
+            get_and_level_user(habit.user.id, habit.multiplier, True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
