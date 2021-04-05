@@ -76,6 +76,8 @@ class TodoView(APIView):
         serializer = TodoSerializer(data=new_todo)
         if serializer.is_valid():
             serializer.save()
+            if (serializer.data['completed'] == True):
+                get_and_level_user(serializer.data['user'], serializer.data['xp'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
