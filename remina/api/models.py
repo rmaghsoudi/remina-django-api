@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import model_to_dict
 from .helpers import validate_timeperiod
 
 # Create your models here.
@@ -52,7 +53,7 @@ class Todo(models.Model):
         on_delete=models.CASCADE,
         blank=True,
     )
-    xp = models.IntegerField(default=1)
+    xp = models.IntegerField(default=100)
     completed = models.BooleanField(default=False)
     dueDate = models.DateField(
         auto_now=False, 

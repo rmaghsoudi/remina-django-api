@@ -11,6 +11,14 @@ from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dic
 
 # Create your views here.
 
+def get_and_level_user(id, xp):
+    user = User.objects.get(pk=id)
+    updated_user = user.leveling_up(int(xp))
+    serializer = UserSerializer(user, data=updated_user)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserView(APIView):
 
@@ -89,6 +97,8 @@ class TodoDetailView(APIView):
     def patch(self, request, pk, format=None):
         todo = self.get_object(pk)
         updated_todo = clear_empty_obj_values(request.data)
+        if (todo.completed == False) and (updated_todo['completed'] == True):
+            get_and_level_user(todo.user.id, todo.xp)
         serializer = TodoSerializer(todo, data=updated_todo, partial=True)
         if serializer.is_valid():
             serializer.save()
