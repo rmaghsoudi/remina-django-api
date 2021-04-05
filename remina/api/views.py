@@ -11,7 +11,7 @@ from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dic
 
 # Create your views here.
 
-def get_and_level_user(id, xp, multiplier, habit_id):
+def get_and_level_user(id, xp, multiplier=None, habit_id=None):
     user = User.objects.get(pk=id)
     if multiplier and habit_id:
         updated_user = user.leveling_up(100 * xp)
@@ -28,6 +28,16 @@ def get_and_level_user(id, xp, multiplier, habit_id):
         serializer.save()
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def calculate_goal_xp(goal):
+    xp = 100
+    if goal.timePeriod == 'day':
+        xp *= 10
+    elif goal.timePeriod == 'week':
+        xp *= 50
+    elif goal.timePeriod == 'month':
+        xp *= 100
+    return xp
 
 class UserView(APIView):
 
@@ -214,6 +224,8 @@ class GoalDetailView(APIView):
     def patch(self, request, pk, format=None):
         goal = self.get_object(pk)
         serializer = GoalSerializer(goal, data=request.data)
+        if (goal.completed == False) and (request.data['completed'] == True):
+            get_and_level_user(goal.user.id, calculate_goal_xp(goal))
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
