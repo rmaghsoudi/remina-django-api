@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from dateutil.relativedelta import *
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import pytz
 from itertools import chain
 
@@ -56,6 +56,11 @@ def one_week_ago():
   one_week_ago = datetime.today() - timedelta(days=7)
   one_week_ago_tzaware = one_week_ago.replace(tzinfo=pytz.UTC)
   return one_week_ago_tzaware
+
+def yesterday():
+  today = date.today()
+  yesterday = today - timedelta(days = 1)
+  return yesterday
 
 def one_month_ago():
   one_month_ago = datetime.today() - relativedelta(month=-1)

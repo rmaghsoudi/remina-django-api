@@ -7,16 +7,19 @@ from django.http import JsonResponse
 from datetime import datetime
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
-from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dict, create_check_array, goal_res_processor
+from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dict, create_check_array, goal_res_processor, yesterday
 
 # Create your views here.
 
 def get_and_level_user(id, xp, multiplier, habit_id):
     user = User.objects.get(pk=id)
-    if multiplier:
+    if multiplier and habit_id:
         updated_user = user.leveling_up(100 * xp)
         habit = Habit.objects.get(pk=habit_id)
-        habit.multiplier += 1
+        if habit.checks.last().timestamp.date == yesterday():
+            habit.multiplier = 1
+        else:
+            habit.multiplier += 1
         habit.save()
     else:
         updated_user = user.leveling_up(int(xp))
