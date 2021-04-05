@@ -11,10 +11,13 @@ from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dic
 
 # Create your views here.
 
-def get_and_level_user(id, xp, multiplier):
+def get_and_level_user(id, xp, multiplier, habit_id):
     user = User.objects.get(pk=id)
     if multiplier:
         updated_user = user.leveling_up(100 * xp)
+        habit = Habit.objects.get(pk=habit_id)
+        habit.multiplier += 1
+        habit.save()
     else:
         updated_user = user.leveling_up(int(xp))
     serializer = UserSerializer(user, data=updated_user)
@@ -227,7 +230,7 @@ class CheckView(APIView):
         serializer = CheckSerializer(data=new_check)
         if serializer.is_valid():
             serializer.save()
-            get_and_level_user(habit.user.id, habit.multiplier, True)
+            get_and_level_user(habit.user.id, habit.multiplier, True, habit.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
