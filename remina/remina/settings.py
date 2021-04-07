@@ -154,7 +154,7 @@ CORS_ORIGIN_WHITELIST = (
 # if ENV_FILE:
 #     load_dotenv(ENV_FILE)
 
-AUTH0_DOMAIN = 'project-remina'
+AUTH0_DOMAIN = 'dev-l0qhbike.us.auth0.com'
 API_IDENTIFIER = 'https://project-remina/'
 PUBLIC_KEY = None
 JWT_ISSUER = None

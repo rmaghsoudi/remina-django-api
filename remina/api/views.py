@@ -90,7 +90,7 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        new_user = request.data
+        new_user, created = User.objects.get_or_create(request.data)
         serializer = UserSerializer(data=new_user)
         if serializer.is_valid():
             serializer.save()
@@ -189,7 +189,6 @@ class HabitView(APIView):
         except:
             raise HttpResponseServerError
 
-    @requires_scope('read:habits')
     def get(self, request, format=None):
         habits = self.get_objects()
         # serializer = HabitSerializer(habits, many=True)
