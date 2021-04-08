@@ -90,8 +90,15 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        new_user, created = User.objects.get_or_create(request.data)
-        serializer = UserSerializer(data=new_user)
+        new_user, created = User.objects.get_or_create(request.data['user'])
+
+        if not created:
+            u_serializer = UserSerializer(new_user)
+            return Response(u_serializer.data)
+
+        user_dict = new_user.__dict__
+        serializer = UserSerializer(data=user_dict)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
