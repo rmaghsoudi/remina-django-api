@@ -167,8 +167,9 @@ class TodoDetailView(APIView):
     def patch(self, request, pk, format=None):
         todo = self.get_object(pk)
         updated_todo = clear_empty_obj_values(request.data)
-        if (todo.completed == False) and (updated_todo['completed'] == True):
-            get_and_level_user(todo.user.id, todo.xp)
+        if 'completed' in updated_todo:
+            if (todo.completed == False) and (updated_todo['completed'] == True):
+                get_and_level_user(todo.user.id, todo.xp)
         serializer = TodoSerializer(todo, data=updated_todo, partial=True)
         if serializer.is_valid():
             serializer.save()
