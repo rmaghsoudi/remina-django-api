@@ -76,6 +76,10 @@ def calculate_goal_xp(goal):
         xp *= 100
     return xp
 
+def get_user_from_req(username):
+    user = User.objects.get(username=username)
+    return user
+
 class UserView(APIView):
 
     def get_object(self, pk):
@@ -125,7 +129,8 @@ class TodoView(APIView):
 
     def get_objects(self):
         try: 
-            return Todo.objects.filter(user=self.request.query_params.get('user_id'))   
+            user = get_user_from_req(self.request.query_params.get('username'))
+            return Todo.objects.filter(user=user.id)   
         except:
             raise HttpResponseServerError
 
@@ -180,7 +185,8 @@ class HabitView(APIView):
 
     def get_objects(self):
         try:
-            habits = Habit.objects.filter(user=self.request.query_params.get('user_id'))
+            user = get_user_from_req(self.request.query_params.get('username'))
+            habits = Habit.objects.filter(user=user.id)
             current_week_habits = to_dict(habits)
             for i in range(0, len(current_week_habits)):
                 checks = habits[i].checks.filter(timestamp__gte=one_week_ago())
@@ -237,6 +243,7 @@ class GoalView(APIView):
 
     def get_objects(self):
         try:
+            user = get_user_from_req(self.request.query_params.get('username'))
             goals = to_dict(Goal.objects.filter(user=self.request.query_params.get('user_id'), completed=False))
             processed_goals = goal_res_processor(goals)
             return processed_goals
