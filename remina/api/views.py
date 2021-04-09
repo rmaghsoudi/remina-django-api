@@ -245,7 +245,7 @@ class GoalView(APIView):
     def get_objects(self):
         try:
             user = get_user_from_req(self.request.query_params.get('username'))
-            goals = to_dict(Goal.objects.filter(user=self.request.query_params.get('user_id'), completed=False))
+            goals = to_dict(Goal.objects.filter(user=user.id, completed=False))
             processed_goals = goal_res_processor(goals)
             return processed_goals
         except:
