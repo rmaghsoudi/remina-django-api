@@ -11,7 +11,7 @@ class CheckSerializer(serializers.ModelSerializer):
 
 
 class TodoSerializer(serializers.ModelSerializer):
-    dueTime = serializers.TimeField("%I:%M %p")
+    dueTime = serializers.TimeField("%H:%M")
     class Meta:
         model = Todo
         fields = ['id', 'description', 'xp', 'user', 'completed', 'dueDate', 'dueTime']

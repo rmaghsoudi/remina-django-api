@@ -3,13 +3,50 @@ from django.http import Http404, HttpResponseServerError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import JsonResponse
 from datetime import datetime
+from functools import wraps
 from .models import User, Todo, Habit, Goal, Check
 from .serializers import UserSerializer, TodoSerializer, HabitSerializer, GoalSerializer, CheckSerializer
 from .helpers import clear_empty_obj_values, one_week_ago, one_month_ago, to_dict, create_check_array, goal_res_processor, yesterday
+import jwt
+from functools import wraps
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
+
+
+def get_token_auth_header(request):
+    """Obtains the access token from the Authorization Header
+    """
+    auth = request.META.get("HTTP_AUTHORIZATION", None)
+    parts = auth.split()
+    token = parts[1]
+
+    return token
+
+
+def requires_scope(required_scope):
+    """Determines if the required scope is present in the access token
+    Args:
+        required_scope (str): The scope required to access the resource
+    """
+    def require_scope(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            token = get_token_auth_header(args[0])
+            decoded = jwt.decode(token, verify=False)
+            if decoded.get("scope"):
+                token_scopes = decoded["scope"].split()
+                for token_scope in token_scopes:
+                    if token_scope == required_scope:
+                        return f(*args, **kwargs)
+            response = JsonResponse({'message': 'You don\'t have access to this resource'})
+            response.status_code = 403
+            return response
+        return decorated
+    return require_scope
 
 def get_and_level_user(id, xp, multiplier=None, habit_id=None):
     user = User.objects.get(pk=id)
@@ -39,6 +76,10 @@ def calculate_goal_xp(goal):
         xp *= 100
     return xp
 
+def get_user_from_req(username):
+    user = User.objects.get(username=username)
+    return user
+
 class UserView(APIView):
 
     def get_object(self, pk):
@@ -53,8 +94,15 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        new_user = request.data
-        serializer = UserSerializer(data=new_user)
+        new_user, created = User.objects.get_or_create(request.data['user'])
+
+        if not created:
+            u_serializer = UserSerializer(new_user)
+            return Response(u_serializer.data)
+
+        user_dict = new_user.__dict__
+        serializer = UserSerializer(data=user_dict)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -81,7 +129,8 @@ class TodoView(APIView):
 
     def get_objects(self):
         try: 
-            return Todo.objects.filter(user=self.request.query_params.get('user_id'))   
+            user = get_user_from_req(self.request.query_params.get('username'))
+            return Todo.objects.filter(user=user.id)   
         except:
             raise HttpResponseServerError
 
@@ -118,8 +167,9 @@ class TodoDetailView(APIView):
     def patch(self, request, pk, format=None):
         todo = self.get_object(pk)
         updated_todo = clear_empty_obj_values(request.data)
-        if (todo.completed == False) and (updated_todo['completed'] == True):
-            get_and_level_user(todo.user.id, todo.xp)
+        if 'completed' in updated_todo:
+            if (todo.completed == False) and (updated_todo['completed'] == True):
+                get_and_level_user(todo.user.id, todo.xp)
         serializer = TodoSerializer(todo, data=updated_todo, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -136,7 +186,8 @@ class HabitView(APIView):
 
     def get_objects(self):
         try:
-            habits = Habit.objects.filter(user=self.request.query_params.get('user_id'))
+            user = get_user_from_req(self.request.query_params.get('username'))
+            habits = Habit.objects.filter(user=user.id)
             current_week_habits = to_dict(habits)
             for i in range(0, len(current_week_habits)):
                 checks = habits[i].checks.filter(timestamp__gte=one_week_ago())
@@ -193,6 +244,7 @@ class GoalView(APIView):
 
     def get_objects(self):
         try:
+            user = get_user_from_req(self.request.query_params.get('username'))
             goals = to_dict(Goal.objects.filter(user=self.request.query_params.get('user_id'), completed=False))
             processed_goals = goal_res_processor(goals)
             return processed_goals
