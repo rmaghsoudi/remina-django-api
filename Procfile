@@ -1,0 +1,1 @@
+web: gunicorn remina.wsgi --log-file -
