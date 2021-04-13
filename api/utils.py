@@ -5,8 +5,9 @@ from django.contrib.auth import authenticate
 import jwt
 import requests
 
-from dotenv import load_dotenv
-load_dotenv()
+import environ
+env = environ.Env()
+env.read_env(env.str('BASE_DIR', '.env'))
 
 def jwt_get_username_from_payload_handler(payload):
     username = payload.get('sub').replace('|', '.')
@@ -16,7 +17,7 @@ def jwt_get_username_from_payload_handler(payload):
 
 def jwt_decode_token(token):
     header = jwt.get_unverified_header(token)
-    auth0_domain = os.environ.get('AUTH0_DOMAIN')
+    auth0_domain = env('AUTH0_DOMAIN')
     jwks = requests.get('https://{}/.well-known/jwks.json'.format(auth0_domain)).json()
     public_key = None
     for jwk in jwks['keys']:
@@ -26,6 +27,6 @@ def jwt_decode_token(token):
     if public_key is None:
         raise Exception('Public key not found.')
 
-    api_audience = os.environ.get('API_IDENTIFIER')
+    api_audience = env('API_IDENTIFIER')
     issuer = 'https://{}/'.format(auth0_domain)
     return jwt.decode(token, public_key, audience=api_audience, issuer=issuer, algorithms=['RS256'])
