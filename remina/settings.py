@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['remina-stage.herokuapp.com', 'remina-prod.herokuapp.com']
 
 
 # Application definition
@@ -87,7 +87,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'remina.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://project-remina.web.app",
+    "https://project-remina.firebaseapp.com"
 ]
 
 REST_FRAMEWORK = {
@@ -163,6 +165,8 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
+    "https://project-remina.web.app",
+    "https://project-remina.firebaseapp.com"
 )
 
 # ENV_FILE = find_dotenv()
