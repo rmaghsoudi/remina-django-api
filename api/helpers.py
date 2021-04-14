@@ -35,12 +35,16 @@ def create_check_array(checks):
   return array
 
 def goal_res_processor(goals):
-  res = {'stopper': False, 'goals': None}
+  res = {'stopper': False, 'dayDisable': False, 'weekDisable': False, 'monthDisable': False, 'goals': None}
   processed_array = []
   base_array = ['day', 'week', 'month']
   test_array = []
   for goal in goals:
-    if (goal['timePeriod'] in base_array) and (goal['timePeriod'] not in test_array):
+    timePeriod = goal['timePeriod']
+    if timePeriod in base_array:
+      disableKey = f'{timePeriod}Disable'
+      res[disableKey] = True
+    if (timePeriod in base_array) and (timePeriod not in test_array):
       test_array.append(goal)
   processed_array = sorted(test_array, key = lambda i: i['timePeriod'])
   if len(processed_array) == 3:
