@@ -94,7 +94,7 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        u, created = User.objects.get_or_create(request.data['user'])
+        u, created = User.objects.get_or_create(username=request.data['user']['username'])
         u_serializer = UserSerializer(u)
 
         if created:
