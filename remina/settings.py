@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import django_heroku
 from pathlib import Path
 import dj_database_url
 # Environment reader
@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['remina-stage.herokuapp.com', 'remina-prod.herokuapp.com']
 
 
 # Application definition
@@ -87,7 +87,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'remina.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://project-remina.web.app",
+    "https://project-remina.firebaseapp.com"
 ]
 
 REST_FRAMEWORK = {
@@ -163,6 +165,8 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
+    "https://project-remina.web.app",
+    "https://project-remina.firebaseapp.com"
 )
 
 # ENV_FILE = find_dotenv()
@@ -190,3 +194,7 @@ JWT_AUTH = {
 
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 DATABASES['default'] = dj_database_url.config(default=env('DATABASE_URL'))
+prod_db  =  dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(prod_db)
+# Activate Django-Heroku.
+django_heroku.settings(locals())

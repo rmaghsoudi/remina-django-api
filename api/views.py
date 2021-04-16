@@ -94,20 +94,16 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        new_user, created = User.objects.get_or_create(request.data['user'])
+        u, created = User.objects.get_or_create(username=request.data['user']['username'])
+        u_serializer = UserSerializer(u)
 
-        if not created:
-            u_serializer = UserSerializer(new_user)
+        if created:
+            return Response(u_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            u_serializer = UserSerializer(u)
             return Response(u_serializer.data)
 
-        user_dict = new_user.__dict__
-        serializer = UserSerializer(data=user_dict)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(u_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # TODO: edit how patches work to encompass other patch requests (other than xp reqs)
     def patch(self, request, pk, format=None):
