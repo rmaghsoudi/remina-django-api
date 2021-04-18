@@ -272,7 +272,7 @@ class GoalDetailView(APIView):
     def patch(self, request, pk, format=None):
         goal = self.get_object(pk)
         serializer = GoalSerializer(goal, data=request.data)
-        if (goal.completed == False) and (request.data['completed'] == True):
+        if ('completed' in request.data.keys()) and (goal.completed == False):
             get_and_level_user(goal.user.id, calculate_goal_xp(goal))
         if serializer.is_valid():
             serializer.save()
