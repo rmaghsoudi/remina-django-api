@@ -123,15 +123,12 @@ class UserView(APIView):
 
 class TodoView(APIView):
 
-    def get_objects(self):
-        try: 
-            user = get_user_from_req(self.request.query_params.get('username'))
-            return Todo.objects.filter(user=user.id)   
-        except:
-            raise HttpResponseServerError
-
     def get(self, request, format=None):
-        todos = self.get_objects()
+        user = get_user_from_req(self.request.query_params.get('username'))
+        incomplete_todos = Todo.objects.filter(user=user.id, completed=False)
+        # limit completed todos to 6
+        complete_todos = Todo.objects.filter(user=user.id, completed=True)[:6]
+        todos = incomplete_todos + complete_todos
         serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
 
