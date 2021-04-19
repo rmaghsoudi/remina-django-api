@@ -128,7 +128,7 @@ class TodoView(APIView):
         incomplete_todos = Todo.objects.filter(user=user.id, completed=False)
         # limit completed todos to 6
         complete_todos = Todo.objects.filter(user=user.id, completed=True)[:6]
-        todos = incomplete_todos | complete_todos
+        todos = incomplete_todos | reversed(complete_todos)
         serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
 
