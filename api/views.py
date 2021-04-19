@@ -13,6 +13,7 @@ from functools import wraps
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from coalesce import coalesce
 
 # Create your views here.
 
@@ -127,8 +128,8 @@ class TodoView(APIView):
         user = get_user_from_req(self.request.query_params.get('username'))
         incomplete_todos = Todo.objects.filter(user=user.id, completed=False)
         # limit completed todos to 6
-        complete_todos = Todo.objects.filter(user=user.id, completed=True)[:6]
-        todos = incomplete_todos | reversed(complete_todos)
+        complete_todos = Todo.objects.filter(user=user.id, completed=True).order_by('-pk')[:6]
+        todos = incomplete_todos | complete_todos
         serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
 
