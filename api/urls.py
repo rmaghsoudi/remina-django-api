@@ -3,13 +3,13 @@ from .views import UserView, TodoView, TodoDetailView, HabitView, HabitDetailVie
 
 
 urlpatterns = [
-    path('users', UserView.as_view()),
+    path('users/', UserView.as_view()),
     path('users/<int:pk>', UserView.as_view()),
-    path('todos', TodoView.as_view()),
+    path('todos/', TodoView.as_view()),
     path('todos/<int:pk>', TodoDetailView.as_view()),
-    path('habits', HabitView.as_view()),
+    path('habits/', HabitView.as_view()),
     path('habits/<int:pk>', HabitDetailView.as_view()),
-    path('goals', GoalView.as_view()),
+    path('goals/', GoalView.as_view()),
     path('goals/<int:pk>', GoalDetailView.as_view()),
-    path('checks', CheckView.as_view()),
+    path('checks/', CheckView.as_view()),
 ]
