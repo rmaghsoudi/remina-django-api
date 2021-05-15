@@ -6,7 +6,7 @@ from .helpers import validate_timeperiod
 
 
 class Goal(models.Model):
-    description = models.CharField(max_length=140,blank=True)
+    description = models.CharField(max_length=140, blank=True)
     user = models.ForeignKey(
         'User',
         related_name='goals',
@@ -53,16 +53,16 @@ class Todo(models.Model):
         on_delete=models.CASCADE,
         blank=True,
     )
-    xp = models.IntegerField(default=100)
-    completed = models.BooleanField(default=False)
+    xp = models.IntegerField(default=100, blank=True, null=True)
+    completed = models.BooleanField(default=False, blank=True, null=True)
     dueDate = models.DateField(
-        auto_now=False, 
+        auto_now=False,
         auto_now_add=False,
         blank=True,
         null=True,
     )
     dueTime = models.TimeField(
-        auto_now=False, 
+        auto_now=False,
         auto_now_add=False,
         blank=True,
         null=True,)
