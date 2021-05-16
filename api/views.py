@@ -42,11 +42,13 @@ def requires_scope(required_scope):
                 for token_scope in token_scopes:
                     if token_scope == required_scope:
                         return f(*args, **kwargs)
-            response = JsonResponse({'message': 'You don\'t have access to this resource'})
+            response = JsonResponse(
+                {'message': 'You don\'t have access to this resource'})
             response.status_code = 403
             return response
         return decorated
     return require_scope
+
 
 def get_and_level_user(id, xp, multiplier=None, habit_id=None):
     user = User.objects.get(pk=id)
@@ -66,6 +68,7 @@ def get_and_level_user(id, xp, multiplier=None, habit_id=None):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 def calculate_goal_xp(goal):
     xp = 100
     if goal.timePeriod == 'day':
@@ -76,9 +79,11 @@ def calculate_goal_xp(goal):
         xp *= 100
     return xp
 
+
 def get_user_from_req(username):
     user = User.objects.get(username=username)
     return user
+
 
 class UserView(APIView):
 
@@ -94,7 +99,8 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        u, created = User.objects.get_or_create(username=request.data['user']['username'])
+        u, created = User.objects.get_or_create(
+            username=request.data['user']['username'])
         u_serializer = UserSerializer(u)
 
         if created:
@@ -127,9 +133,9 @@ class TodoView(APIView):
         user = get_user_from_req(self.request.query_params.get('username'))
         incomplete_todos = Todo.objects.filter(user=user.id, completed=False)
         # limit completed todos to 6
-        complete_todos = Todo.objects.filter(user=user.id, completed=True).order_by('-pk')[:6]
-        todos = incomplete_todos | complete_todos
-        serializer = TodoSerializer(todos, many=True)
+        # complete_todos = Todo.objects.filter(user=user.id, completed=True).order_by('-pk')[:6]
+        # todos = incomplete_todos | complete_todos
+        serializer = TodoSerializer(incomplete_todos, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -138,7 +144,8 @@ class TodoView(APIView):
         if serializer.is_valid():
             serializer.save()
             if (serializer.data['completed'] == True):
-                get_and_level_user(serializer.data['user'], serializer.data['xp'])
+                get_and_level_user(
+                    serializer.data['user'], serializer.data['xp'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -211,7 +218,6 @@ class HabitView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class HabitDetailView(APIView):
 
     def get_object(self, pk):
@@ -232,6 +238,7 @@ class HabitDetailView(APIView):
         habit = self.get_object(pk)
         habit.delete()
         return Response({'message': 'Habit deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+
 
 class GoalView(APIView):
 
@@ -257,6 +264,8 @@ class GoalView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class GoalDetailView(APIView):
 
     def get_object(self, pk):
@@ -264,7 +273,6 @@ class GoalDetailView(APIView):
             return Goal.objects.get(pk=pk)
         except Goal.DoesNotExist:
             raise Http404
-
 
     def patch(self, request, pk, format=None):
         goal = self.get_object(pk)
